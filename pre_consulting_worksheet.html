@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사전 워크시트 — 크리에이터 컨설팅</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+  :root {
+    --black: #111111;
+    --gray-1: #333333;
+    --gray-2: #666666;
+    --gray-3: #999999;
+    --gray-4: #cccccc;
+    --gray-5: #eeeeee;
+    --gray-6: #f7f7f7;
+    --white: #ffffff;
+    --accent: #1a1aff;
+    --accent-light: #e8e8ff;
+    --line: #e0e0e0;
+    --radius: 6px;
+    --max: 720px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--gray-6);
+    color: var(--black);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── 상단 헤더 ── */
+  .site-header {
+    background: var(--black);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-header .brand {
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .site-header .nav a {
+    color: var(--gray-4);
+    font-size: 12px;
+    text-decoration: none;
+    margin-left: 20px;
+  }
+  .site-header .nav a:hover { color: var(--white); }
+
+  /* ── 히어로 ── */
+  .hero {
+    background: var(--black);
+    padding: 60px 24px 48px;
+    text-align: center;
+    border-bottom: 1px solid #222;
+  }
+  .hero .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-3);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    color: var(--gray-3);
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── 진행 표시 ── */
+  .progress-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .progress-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--gray-4);
+    font-weight: 400;
+  }
+  .progress-step.active { color: var(--black); font-weight: 500; }
+  .progress-step .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gray-4);
+  }
+  .progress-step.active .dot { background: var(--accent); }
+  .progress-step.done .dot { background: var(--black); }
+  .progress-step.done { color: var(--gray-2); }
+  .progress-sep { color: var(--gray-4); font-size: 12px; }
+
+  /* ── 페이지 래퍼 ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── 섹션 카드 ── */
+  .container {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  .section-block {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 28px 28px 32px;
+    margin-bottom: 20px;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .section-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--black);
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--gray-3);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  /* ── 입력 필드 ── */
+  .field {
+    margin-bottom: 18px;
+  }
+  .field:last-child { margin-bottom: 0; }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-1);
+    margin-bottom: 6px;
+  }
+  .field .hint {
+    font-size: 12px;
+    color: var(--gray-3);
+    font-weight: 400;
+    margin-left: 4px;
+  }
+
+  input[type="text"], textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--line);
+    border-radius: 0;
+    padding: 8px 2px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    color: var(--black);
+    background: transparent;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+  }
+  input[type="text"]:focus, textarea:focus {
+    border-bottom-color: var(--accent);
+  }
+  input[type="text"]::placeholder, textarea::placeholder {
+    color: var(--gray-4);
+    font-size: 13px;
+  }
+  textarea {
+    min-height: 72px;
+    line-height: 1.7;
+  }
+
+  /* ── 2열 그리드 ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 24px;
+  }
+  @media (max-width: 500px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ── 태그 입력 ── */
+  .tag-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tag-row input {
+    flex: 1;
+    min-width: 100px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    color: var(--black);
+    background: var(--gray-6);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    text-align: center;
+  }
+  .tag-row input:focus {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .tag-row input::placeholder { color: var(--gray-4); font-size: 12px; }
+
+  /* ── 체크박스 ── */
+  .check-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .check-item input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .check-item span {
+    font-size: 14px;
+    color: var(--gray-1);
+    line-height: 1.4;
+  }
+
+  /* ── 번호 입력 ── */
+  .numbered-inputs { display: flex; flex-direction: column; gap: 14px; }
+  .numbered-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .numbered-input .n {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-3);
+    min-width: 20px;
+    flex-shrink: 0;
+  }
+  .numbered-input input {
+    flex: 1;
+    border-bottom: 1.5px solid var(--line);
+    padding: 6px 2px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    background: transparent;
+    border-top: none; border-left: none; border-right: none;
+    border-radius: 0;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .numbered-input input:focus { border-bottom-color: var(--accent); }
+  .numbered-input input::placeholder { color: var(--gray-4); font-size: 13px; }
+
+  /* ── 조합 테이블 ── */
+  .combo-table { width: 100%; border-collapse: collapse; }
+  .combo-table th {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-3);
+    padding: 0 6px 8px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+  .combo-table td {
+    padding: 10px 6px 4px;
+    vertical-align: middle;
+  }
+  .combo-table td input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--line);
+    padding: 6px 2px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .combo-table td input:focus { border-bottom-color: var(--accent); }
+  .combo-table td input::placeholder { color: var(--gray-4); font-size: 12px; }
+  .combo-arrow { color: var(--gray-4); font-size: 16px; text-align: center; width: 28px; }
+
+  /* ── 기타 입력 (체크 옆) ── */
+  .etc-input {
+    flex: 1;
+    border: none;
+    border-bottom: 1.5px solid var(--line);
+    padding: 0 2px 2px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .etc-input:focus { border-bottom-color: var(--accent); }
+
+  /* ── 네비게이션 버튼 ── */
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    gap: 12px;
+  }
+  .btn {
+    padding: 12px 28px;
+    border-radius: var(--radius);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    outline: none;
+  }
+  .btn-primary {
+    background: var(--black);
+    color: var(--white);
+    flex: 1;
+    max-width: 240px;
+  }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--gray-2);
+    border: 1.5px solid var(--line);
+  }
+  .btn-secondary:hover { border-color: var(--gray-2); color: var(--black); }
+  .btn-submit {
+    background: var(--accent);
+    color: var(--white);
+    flex: 1;
+    max-width: 240px;
+  }
+  .btn-submit:hover { background: #0000cc; }
+  .btn-submit:disabled { background: var(--gray-4); cursor: not-allowed; }
+
+  /* ── 완료 화면 ── */
+  .done-screen {
+    text-align: center;
+    padding: 80px 24px;
+    max-width: var(--max);
+    margin: 0 auto;
+  }
+  .done-icon {
+    width: 60px; height: 60px;
+    background: var(--black);
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .done-icon svg { width: 28px; height: 28px; }
+  .done-screen h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .done-screen p {
+    color: var(--gray-2);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .done-link {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 12px 28px;
+    background: var(--black);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* ── 제출 상태 ── */
+  .submit-status {
+    font-size: 13px;
+    color: var(--gray-2);
+    text-align: center;
+    margin-top: 12px;
+    min-height: 20px;
+  }
+  .submit-status.error { color: #cc0000; }
+  .submit-status.success { color: #006600; }
+
+  /* ── 페이지 구분선 ── */
+  .page-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0 24px;
+    color: var(--gray-3);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .page-divider::before, .page-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+</style>
+</head>
+<body>
+
+<!-- 상단 헤더 -->
+<header class="site-header">
+  <span class="brand">Creator Worksheets</span>
+  <nav class="nav">
+    <a href="https://qqjjhayden.github.io/creator_worksheets/">홈</a>
+  </nav>
+</header>
+
+<!-- 히어로 -->
+<div class="hero">
+  <div class="eyebrow">Pre-Consulting Worksheet</div>
+  <h1>컨설팅 사전 워크시트</h1>
+  <p>컨설팅 전에 미리 채워오세요.<br>정답은 없습니다. 떠오르는 대로 적어주세요 :)</p>
+</div>
+
+<!-- 진행 표시 -->
+<div class="progress-bar">
+  <div class="progress-step active" id="step-1">
+    <div class="dot"></div><span>나에 대해서</span>
+  </div>
+  <span class="progress-sep">—</span>
+  <div class="progress-step" id="step-2">
+    <div class="dot"></div><span>내가 생각하는 콘텐츠</span>
+  </div>
+  <span class="progress-sep">—</span>
+  <div class="progress-step" id="step-3">
+    <div class="dot"></div><span>제출</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE 1 — 나에 대해서 -->
+<!-- ══════════════════════════════════════ -->
+<div class="page active" id="page-1">
+<div class="container">
+
+  <div class="section-block">
+    <div class="section-label">
+      <span class="section-num">01</span>
+      <span class="section-title">나의 평범함을 모두 적어보세요</span>
+    </div>
+    <div class="section-desc">하나씩 볼 땐 평범해 보여도, 조합하면 나만의 것이 됩니다. 최대한 많이, 판단 없이 나열해 주세요.</div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>직업 / 역할 <span class="hint">지금 하고 있는 것</span></label>
+        <input type="text" id="job" placeholder="예) 주부, 직장인, 프리랜서, 취준 중...">
+      </div>
+      <div class="field">
+        <label>나이 / 인생 시즌</label>
+        <input type="text" id="age" placeholder="예) 30대 초반, 육아 3년차, 이직 준비 중...">
+      </div>
+      <div class="field">
+        <label>사는 곳 / 환경</label>
+        <input type="text" id="location" placeholder="예) 서울 외곽, 좁은 집, 반려동물과 함께...">
+      </div>
+      <div class="field">
+        <label>성향 / 기질</label>
+        <input type="text" id="personality" placeholder="예) 내향인, 완벽주의, 유리멘탈, 감성적...">
+      </div>
+      <div class="field">
+        <label>가치관</label>
+        <input type="text" id="values" placeholder="예) 효율 중시, 미니멀, 가족 우선...">
+      </div>
+      <div class="field">
+        <label>관심사 / 취미</label>
+        <input type="text" id="interests" placeholder="예) 독서, 요리, 운동, 투자...">
+      </div>
+      <div class="field">
+        <label>경험 / 이력</label>
+        <input type="text" id="experience" placeholder="예) 이직 3번, 프리랜서 경험, 해외 거주...">
+      </div>
+      <div class="field">
+        <label>문제 / 고민</label>
+        <input type="text" id="problems" placeholder="예) 불안, 번아웃, 시간 부족, 돈 걱정...">
+      </div>
+    </div>
+    <div class="field" style="margin-top:4px">
+      <label>잘하는 것 / 능력</label>
+      <input type="text" id="skills" placeholder="예) 비교분석 잘함, 글쓰기, 정리 잘함, 공감 잘 함...">
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">
+      <span class="section-num">02</span>
+      <span class="section-title">나를 태그로 표현한다면?</span>
+    </div>
+    <div class="section-desc">위에서 적은 것들 중 나를 가장 잘 표현하는 단어 5개를 골라주세요.</div>
+    <div class="tag-row">
+      <input type="text" id="tag1" placeholder="태그 1">
+      <input type="text" id="tag2" placeholder="태그 2">
+      <input type="text" id="tag3" placeholder="태그 3">
+      <input type="text" id="tag4" placeholder="태그 4">
+      <input type="text" id="tag5" placeholder="태그 5">
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">
+      <span class="section-num">03</span>
+      <span class="section-title">지금 나의 상태</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>운영 중인 채널 / 플랫폼</label>
+        <input type="text" id="channel" placeholder="예) 인스타그램, 유튜브, 아직 없음...">
+      </div>
+      <div class="field">
+        <label>지금까지 발행한 콘텐츠 수</label>
+        <input type="text" id="post_count" placeholder="예) 0개, 10개 정도, 꾸준히 올리는 중...">
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:8px">
+      <label>지금 가장 막히는 게 뭔가요? <span class="hint">해당하는 것 모두 체크</span></label>
+      <div class="check-group" style="margin-top:10px">
+        <label class="check-item">
+          <input type="checkbox" id="block1" value="뭘 올려야 할지 소재가 없다">
+          <span>뭘 올려야 할지 소재가 없다</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="block2" value="올리고 있는데 반응이 없다">
+          <span>올리고 있는데 반응이 없다</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="block3" value="방향이 뭔지 모르겠다">
+          <span>방향이 뭔지 모르겠다</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="block4" value="만드는 게 너무 힘들어서 지속이 안 된다">
+          <span>만드는 게 너무 힘들어서 지속이 안 된다</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="block5" value="올리고 나서 이게 맞나 싶다">
+          <span>올리고 나서 '이게 맞나' 싶다</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="block6" value="기타">
+          <span>기타:</span>
+          <input type="text" class="etc-input" id="block_etc" placeholder="직접 입력">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <span></span>
+    <button class="btn btn-primary" onclick="goPage(2)">다음 — 내가 생각하는 콘텐츠 →</button>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE 2 — 내가 생각하는 콘텐츠 -->
+<!-- ══════════════════════════════════════ -->
+<div class="page" id="page-2">
+<div class="container">
+
+  <div class="section-block">
+    <div class="section-label">
+      <span class="section-num">04</span>
+      <span class="section-title">원래 생각했던 콘텐츠 방향</span>
+    </div>
+    <div class="section-desc">완벽하지 않아도 됩니다. 막연한 생각이어도 괜찮아요.</div>
+
+    <div class="field">
+      <label>어떤 콘텐츠를 만들고 싶었나요?</label>
+      <textarea id="content_idea" placeholder="예) 육아 일상, 독서 기록, 직장인 부업 팁, 미니멀 라이프..."></textarea>
+    </div>
+    <div class="field">
+      <label>왜 시작하려고 했나요? (또는 왜 시작했나요?)</label>
+      <textarea id="why_start" placeholder="예) 기록하고 싶어서, 수익을 내고 싶어서, 나 같은 사람에게 도움이 되고 싶어서..."></textarea>
+    </div>
+    <div class="field">
+      <label>누가 봐줬으면 좋겠나요?</label>
+      <input type="text" id="target" placeholder="예) 나 같은 30대 엄마, 이직 고민하는 직장인, 독서 좋아하는 내향인...">
+    </div>
+    <div class="field">
+      <label>6개월 후, 이 채널이 잘 됐다면 어떤 일이 일어나 있을까요?</label>
+      <textarea id="goal_6m" placeholder="예) 팔로워 1000명, 협찬 문의, 부수입 발생, 나를 알아봐주는 사람들..."></textarea>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">
+      <span class="section-num">05</span>
+      <span class="section-title">실제로 만들어본 콘텐츠 소재</span>
+    </div>
+    <div class="section-desc">만들었거나, 만들려다 포기했거나, 언젠가 만들고 싶었던 것들. 뭐든 적어주세요.</div>
+    <div class="numbered-inputs">
+      <div class="numbered-input"><span class="n">1</span><input type="text" id="item1" placeholder="소재를 자유롭게 적어주세요"></div>
+      <div class="numbered-input"><span class="n">2</span><input type="text" id="item2" placeholder=""></div>
+      <div class="numbered-input"><span class="n">3</span><input type="text" id="item3" placeholder=""></div>
+      <div class="numbered-input"><span class="n">4</span><input type="text" id="item4" placeholder="(없으면 비워도 됩니다)"></div>
+      <div class="numbered-input"><span class="n">5</span><input type="text" id="item5" placeholder="(없으면 비워도 됩니다)"></div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">
+      <span class="section-num">06</span>
+      <span class="section-title">태그 3개를 조합해서 소재를 만들어보세요</span>
+    </div>
+    <div class="section-desc">2페이지 태그 중 2~3개를 골라 조합해보세요. 아이디어가 안 떠오르면 비워도 됩니다.</div>
+    <table class="combo-table">
+      <thead>
+        <tr>
+          <th>태그 조합</th>
+          <th class="combo-arrow"></th>
+          <th>떠오르는 소재</th>
+          <th class="combo-arrow"></th>
+          <th>제목 아이디어</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="text" id="combo1_tags" placeholder="예) 엄마 + 독서 + 내향인"></td>
+          <td class="combo-arrow">→</td>
+          <td><input type="text" id="combo1_topic" placeholder="예) 내향인 엄마 추천 책 리스트"></td>
+          <td class="combo-arrow">→</td>
+          <td><input type="text" id="combo1_title" placeholder="예) 조용한 엄마가 고른 책 5권"></td>
+        </tr>
+        <tr><td colspan="5" style="padding:6px 0"></td></tr>
+        <tr>
+          <td><input type="text" id="combo2_tags" placeholder="태그 조합"></td>
+          <td class="combo-arrow">→</td>
+          <td><input type="text" id="combo2_topic" placeholder="소재"></td>
+          <td class="combo-arrow">→</td>
+          <td><input type="text" id="combo2_title" placeholder="제목 아이디어"></td>
+        </tr>
+        <tr><td colspan="5" style="padding:6px 0"></td></tr>
+        <tr>
+          <td><input type="text" id="combo3_tags" placeholder="태그 조합"></td>
+          <td class="combo-arrow">→</td>
+          <td><input type="text" id="combo3_topic" placeholder="소재"></td>
+          <td class="combo-arrow">→</td>
+          <td><input type="text" id="combo3_title" placeholder="제목 아이디어"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-block">
+    <div class="section-label">
+      <span class="section-num">07</span>
+      <span class="section-title">마지막으로</span>
+    </div>
+    <div class="field">
+      <label>이름 / 닉네임</label>
+      <input type="text" id="name" placeholder="컨설팅 시 부를 이름이나 닉네임을 적어주세요">
+    </div>
+    <div class="field">
+      <label>컨설팅에서 가장 원하는 것이 있다면?</label>
+      <textarea id="consulting_want" placeholder="예) 방향을 잡고 싶다, 첫 콘텐츠를 만들고 싶다, 반응이 없는 이유를 알고 싶다..."></textarea>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goPage(1)">← 이전</button>
+    <button class="btn btn-submit" id="submit-btn" onclick="submitForm()">제출하기</button>
+  </div>
+  <div class="submit-status" id="submit-status"></div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 완료 화면 -->
+<!-- ══════════════════════════════════════ -->
+<div class="page" id="page-done">
+  <div class="done-screen">
+    <div class="done-icon">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 14L11 20L23 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2>제출 완료!</h2>
+    <p>워크시트를 잘 받았습니다 :)</p>
+    <p>컨설팅 전에 내용을 검토하고<br>더 깊은 대화를 준비하겠습니다.</p>
+    <a href="https://qqjjhayden.github.io/creator_worksheets/" class="done-link">워크시트 홈으로 →</a>
+  </div>
+</div>
+
+<script>
+// ── Google Apps Script URL ──────────────────────────────
+// 아래 URL을 본인의 Google Apps Script 배포 URL로 교체하세요
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwIkNMt9sFrMISlZFdb-_vo9z6P78ZK0P8-7oB7LoGdXdi5PAj881g-2mBhSRW_Bzb2/exec";
+
+// ── 페이지 전환 ─────────────────────────────────────────
+function goPage(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + n).classList.add('active');
+
+  // 진행 표시 업데이트
+  document.querySelectorAll('.progress-step').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i + 1 < n) s.classList.add('done');
+    else if (i + 1 === n) s.classList.add('active');
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── 체크박스 값 수집 ────────────────────────────────────
+function getBlockedReasons() {
+  const checked = [];
+  ['block1','block2','block3','block4','block5'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.checked) checked.push(el.value);
+  });
+  const etc = document.getElementById('block_etc').value.trim();
+  if (document.getElementById('block6').checked && etc) checked.push('기타: ' + etc);
+  return checked.join(' / ');
+}
+
+// ── 제출 ────────────────────────────────────────────────
+async function submitForm() {
+  const btn = document.getElementById('submit-btn');
+  const status = document.getElementById('submit-status');
+
+  btn.disabled = true;
+  status.textContent = '제출 중...';
+  status.className = 'submit-status';
+
+  const data = {
+    name:            document.getElementById('name').value,
+    timestamp:       new Date().toLocaleString('ko-KR'),
+    // 1페이지
+    job:             document.getElementById('job').value,
+    age:             document.getElementById('age').value,
+    location:        document.getElementById('location').value,
+    personality:     document.getElementById('personality').value,
+    values:          document.getElementById('values').value,
+    interests:       document.getElementById('interests').value,
+    experience:      document.getElementById('experience').value,
+    problems:        document.getElementById('problems').value,
+    skills:          document.getElementById('skills').value,
+    tags:            [1,2,3,4,5].map(i => document.getElementById('tag'+i).value).filter(Boolean).join(', '),
+    channel:         document.getElementById('channel').value,
+    post_count:      document.getElementById('post_count').value,
+    blocked_reasons: getBlockedReasons(),
+    // 2페이지
+    content_idea:    document.getElementById('content_idea').value,
+    why_start:       document.getElementById('why_start').value,
+    target:          document.getElementById('target').value,
+    goal_6m:         document.getElementById('goal_6m').value,
+    items:           [1,2,3,4,5].map(i => document.getElementById('item'+i).value).filter(Boolean).join(' / '),
+    combo1:          [document.getElementById('combo1_tags').value, document.getElementById('combo1_topic').value, document.getElementById('combo1_title').value].filter(Boolean).join(' → '),
+    combo2:          [document.getElementById('combo2_tags').value, document.getElementById('combo2_topic').value, document.getElementById('combo2_title').value].filter(Boolean).join(' → '),
+    combo3:          [document.getElementById('combo3_tags').value, document.getElementById('combo3_topic').value, document.getElementById('combo3_title').value].filter(Boolean).join(' → '),
+    consulting_want: document.getElementById('consulting_want').value,
+  };
+
+  // URL이 설정되지 않은 경우 로컬 테스트 모드
+  if (SCRIPT_URL === "https://script.google.com/macros/s/AKfycbwIkNMt9sFrMISlZFdb-_vo9z6P78ZK0P8-7oB7LoGdXdi5PAj881g-2mBhSRW_Bzb2/exec") {
+    console.log("제출 데이터:", data);
+    setTimeout(() => {
+      goPage('done');
+      document.getElementById('page-done').style.display = 'block';
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-done').classList.add('active');
+    }, 800);
+    return;
+  }
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-done').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (err) {
+    status.textContent = '제출 중 오류가 발생했습니다. 다시 시도해주세요.';
+    status.className = 'submit-status error';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
