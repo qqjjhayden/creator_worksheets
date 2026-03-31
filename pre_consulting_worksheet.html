@@ -742,7 +742,7 @@
 <script>
 // ── Google Apps Script URL ──────────────────────────────
 // 아래 URL을 본인의 Google Apps Script 배포 URL로 교체하세요
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwIkNMt9sFrMISlZFdb-_vo9z6P78ZK0P8-7oB7LoGdXdi5PAj881g-2mBhSRW_Bzb2/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxB87fMK9rFjRBx6jt-1SlFvXbJfRKDHsPol2IqtYqO3l5hUP3Eh-F6V4NtsWJ_5cUn/exec";
 
 // ── 페이지 전환 ─────────────────────────────────────────
 function goPage(n) {
@@ -807,7 +807,7 @@ async function submitForm() {
     consulting_want: document.getElementById('consulting_want').value,
   };
 
-  if (SCRIPT_URL === "https://script.google.com/macros/s/AKfycbwIkNMt9sFrMISlZFdb-_vo9z6P78ZK0P8-7oB7LoGdXdi5PAj881g-2mBhSRW_Bzb2/exec") {
+  if (SCRIPT_URL === "https://script.google.com/macros/s/AKfycbxB87fMK9rFjRBx6jt-1SlFvXbJfRKDHsPol2IqtYqO3l5hUP3Eh-F6V4NtsWJ_5cUn/exec") {
     console.log("제출 데이터:", data);
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-done').classList.add('active');
