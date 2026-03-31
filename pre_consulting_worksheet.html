@@ -783,7 +783,6 @@ async function submitForm() {
   const data = {
     name:            document.getElementById('name').value,
     timestamp:       new Date().toLocaleString('ko-KR'),
-    // 1페이지
     job:             document.getElementById('job').value,
     age:             document.getElementById('age').value,
     location:        document.getElementById('location').value,
@@ -797,7 +796,6 @@ async function submitForm() {
     channel:         document.getElementById('channel').value,
     post_count:      document.getElementById('post_count').value,
     blocked_reasons: getBlockedReasons(),
-    // 2페이지
     content_idea:    document.getElementById('content_idea').value,
     why_start:       document.getElementById('why_start').value,
     target:          document.getElementById('target').value,
@@ -809,29 +807,48 @@ async function submitForm() {
     consulting_want: document.getElementById('consulting_want').value,
   };
 
-  // URL이 설정되지 않은 경우 로컬 테스트 모드
   if (SCRIPT_URL === "https://script.google.com/macros/s/AKfycbwIkNMt9sFrMISlZFdb-_vo9z6P78ZK0P8-7oB7LoGdXdi5PAj881g-2mBhSRW_Bzb2/exec") {
     console.log("제출 데이터:", data);
-    setTimeout(() => {
-      goPage('done');
-      document.getElementById('page-done').style.display = 'block';
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-done').classList.add('active');
-    }, 800);
-    return;
-  }
-
-  try {
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-done').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  // hidden iframe + form 방식 (CORS 오류 우회)
+  try {
+    let iframe = document.getElementById('hidden_iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.name = 'hidden_iframe';
+      iframe.id = 'hidden_iframe';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+
+    iframe.onload = function() {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-done').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = SCRIPT_URL;
+    form.target = 'hidden_iframe';
+    form.style.display = 'none';
+
+    Object.entries(data).forEach(([key, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = value;
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
 
   } catch (err) {
     status.textContent = '제출 중 오류가 발생했습니다. 다시 시도해주세요.';
